@@ -1,9 +1,13 @@
 {
 	"name"				: "lutils"
 ,	"description"		: "A small set of browser-friendly utilities"
-,	"version"			: "0.2.11"
+,	"version"			: "0.2.12"
 ,	"author"			: { "name": "nfour" }
-
+,	"repository"		: {
+		"type": "git",
+		"url": "https://github.com/nfour/lutils"
+	}
+	
 ,	"devDependencies": {
 		"nodeunit": "^0.9.0"
 	}
