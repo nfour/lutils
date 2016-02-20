@@ -1,22 +1,22 @@
 {
-	"name"				: "lutils"
-,	"description"		: "A small set of browser-friendly utilities"
-,	"version"			: "0.2.12"
-,	"author"			: { "name": "nfour" }
-,	"repository"		: {
-		"type": "git",
-		"url": "https://github.com/nfour/lutils"
-	}
-	
-,	"devDependencies": {
-		"nodeunit": "^0.9.0"
-	}
-	
-,	"scripts": {
-		"build"		: "cake build"
-	,	"test"		: "npm run build && nodeunit ./test"
-	,	"publicate"	: "npm run build && npm publish"
-	}
+    "name"        : "lutils",
+    "description" : "A small set of browser-friendly utilities",
+    "version"     : "1.0.0",
+    "author"      : { "name": "nfour" },
+    "repository"  : {
+        "type" : "git",
+        "url"  : "https://github.com/nfour/lutils"
+    },
 
-,	"main": "./index"
+    "scripts": {
+        "test"      : "nodeunit ./test",
+        "publicate" : "npm run test && npm publish"
+    },
+
+    "main": "./index",
+
+    "devDependencies": {
+        "nodeunit"     : "^0.9.0",
+        "babel-eslint" : "latest"
+    }
 }

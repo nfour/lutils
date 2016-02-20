@@ -1,4 +1,5 @@
-var typeOf = require('lutils-typeof')
+// var typeOf = require('lutils-typeof')
+var typeOf = require('../typeOf')
 
 /*
     Merge the second object into the first recursively until depth is reached for each property.

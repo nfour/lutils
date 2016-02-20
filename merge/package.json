@@ -9,7 +9,7 @@
     },
 
     "scripts": {
-        "test"      : "nodeunit ./test",
+        "test"      : "nodeunit ./test.js",
         "publicate" : "npm run test && npm publish"
     },
 
