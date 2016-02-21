@@ -13,15 +13,15 @@ const clone  = require('lutils-clone')
 ## API
 ### `merge`
 Recursively merge objects.
-See [lutils-merge](/nfour/lutils-merge/)
+See [lutils-merge](https://github.com/nfour/lutils-merge)
 
 ### `clone`
 Recursively clone objects.
-See [lutils-clone](/nfour/lutils-clone/)
+See [lutils-clone](https://github.com/nfour/lutils-clone)
 
 ### `typeOf`
 Type check for primitives reliably.
-See [lutils-typeof](/nfour/lutils-typeof/)
+See [lutils-typeof](https://github.com/nfour/lutils-typeof)
 
 
 ## Why?
