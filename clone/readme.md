@@ -4,7 +4,7 @@ Reliably and recursively clone javascript objects
 ## API
 
 ### `clone([mixed], [[options]])`
-Merges all objects into first object.
+Clones an object, recursively.
 
 ```js
 import clone from 'lutils-clone'
@@ -27,9 +27,7 @@ newObj.test.__proto__ === test.__proto__ // true
 newObj.fn === obj.fn // true
 ```
 
-
 ## Advanced usage
-
 ### Options
 ```js
 {
