@@ -1,5 +1,5 @@
-.git
-nodemon.json
-src
-test
-Cakefile
+.git*
+test*
+/clone
+/typeOf
+/merge
