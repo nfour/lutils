@@ -1,9 +1,9 @@
-## 1.0.0
+### `1.0.0`
 - Rebuilt lutils, splitting each function off
 	- `lutils-typeof`
 	- `lutils-merge`
 	- `lutils-clone`
-	- `lutils` exposes all three
+	- `lutils` simply exposes all three
 - Converted to ES5 from CoffeeScript
 - Refactored API to be more flexible and consitant with similar utilities, such as underscore
 	- `merge`, `merge.whtie`, `merge.black`
@@ -16,8 +16,8 @@
 	- `typeOf` reamins the same
 	- See each modules readme for precise api
 
-## 0.2.10
+### `0.2.10`
 - Fixed `depth` being compared one unit too low.
 
-## 0.2.7
+### `0.2.7`
 - Fixed an `{}.__proto__` mutation bug. `clone` is now significantly faster.

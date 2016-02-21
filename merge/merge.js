@@ -1,16 +1,8 @@
-// var typeOf = require('lutils-typeof')
-var typeOf = require('../typeOf')
+var typeOf = require('lutils-typeof')
 
-/*
-    Merge the second object into the first recursively until depth is reached for each property.
-
-    @param obj1 {Object}
-    @param obj2 {Object} Merged into obj1
-    @param depth {Number}
-    @param types {Array} Array of types to iterate over. Defaults to ['object']
-    @return obj1
-*/
-
+/**
+ *  Merges objects together
+ */
 var merge = function() {
     var options = parseOptions(arguments)
 
@@ -18,6 +10,10 @@ var merge = function() {
 
     return reducer(options)
 }
+
+/**
+ *  Merges objects together, but only when keys dont match
+ */
 
 merge.black = function() {
     var options = parseOptions(arguments)
@@ -27,6 +23,9 @@ merge.black = function() {
     return reducer(options)
 }
 
+/**
+ *  Merges objects together, but only when keys match
+ */
 merge.white = function() {
     var options = parseOptions(arguments)
 
@@ -38,17 +37,17 @@ merge.white = function() {
 
 merge.tests = {
     merge: function(params) {
-        if ( ! params.iterable ) return true
+        if ( params.assigning ) return true
 
         return params.key in params.obj1
     },
     white: function(params) {
-        if ( params.iterable ) return true
+        if ( params.recursing ) return true
 
         return params.key in params.obj2
     },
     black: function(params) {
-        if ( params.iterable ) return true
+        if ( params.recursing ) return true
 
         return ! ( params.key in params.obj1 )
     },
@@ -76,12 +75,18 @@ function parseOptions(args) {
     }
 
     args = Array.prototype.slice.call(args)
+    var lastArg = args[ args.length - 1 ]
+
+    if ( typeOf.Function(lastArg) ) {
+        options.tests.push(lastArg)
+        args.pop()
+    }
 
     if ( typeOf.Array(args[0]) ) {
         if ( args[1] ) {
             options.depth = args[1].depth || options.depth
             options.types = castTypes( args[1].types || options.types )
-            options.tests = [ args[1].test ]
+            if ( args[1].test ) options.tests.push(args[1].test)
         }
 
         options.objects = args[0]
@@ -120,18 +125,20 @@ function iterate(obj1, obj2, depth, options) {
             key      : key,
             depth    : depth,
             options  : options,
-            iterable : false
+            assigning: false,
+            recursing: false,
         }
 
         if (
             ( obj2Type in options.types ) &&
             ( obj1Type in options.types)
         ) {
-            testOptions.iterable = true
+            testOptions.recursing = true
             if ( ! runTests(options.tests, testOptions) ) continue
 
             iterate(obj1[key], obj2[key], depth, options)
         } else {
+            testOptions.assigning = true
             if ( ! runTests(options.tests, testOptions) ) continue
 
             obj1[key] = obj2[key]

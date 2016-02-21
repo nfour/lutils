@@ -1,38 +1,61 @@
+var typeOf = require('lutils-typeof')
+var clone = require('./clone')
 
-exports["clone"] = (test) ->
-    expected =
+var inspect = function(val) {
+    return require('util').inspect(val, { depth: 5, colors: true, showHidden : true })
+}
+
+exports["clone"] = function(test) {
+    var regex, Class
+
+    var expected = {
         a: [
             1, {
-                b: regex = /aaa/i
-                c: do ->
-                    fn = -> true
-                    fn.b = -> fn()
+                b: regex = /aaa/i,
+                c: (function() {
+                    var fn
+                    fn = function() {
+                        return true
+                    }
+
+                    fn.b = function() {
+                        return fn()
+                    }
+
+                    fn.obj = {}
 
                     return fn
+                })(),
+                d: Class = (function() {
+                    function Test() {
+                        this.val = true
+                    }
 
-                d: class Test
-                    constructor: ->
-                        @val = true
-                    a: -> @val
+                    Test.prototype.a = function() {
+                        return this.val
+                    }
 
-                e: new Test()
+                    return Test
 
-
+                })(),
+                e: new Class()
             }
         ]
+    }
 
-    actual = clone expected, null, [ 'object', 'array', 'function' ]
 
-    console.log inspect expected
-    console.log inspect actual
+    var actual = clone(expected, { types: ['object', 'array', 'function'] })
 
-    #test.deepEqual actual, expected
-    test.ok actual.a[1].c?()
-    test.ok actual.a[1].c.b?()
-    test.ok new actual.a[1].d().a()
-    test.ok actual.a[1].e.a()
+    console.log( 'expected', inspect(expected) )
+    console.log( 'actual', inspect(actual) )
 
-    test.ok actual.a isnt expected.a
-    test.ok actual.a[1] isnt expected.a[1]
+    test.ok( typeOf.Function(actual.a[1].c) )
+    test.ok( actual.a[1].c === expected.a[1].c )
+    test.ok( new actual.a[1].d().a() )
+    test.ok( actual.a[1].e.a() )
+    test.ok( actual.a !== expected.a )
+    test.ok( actual.a[1] !== expected.a[1] )
+    
+    return test.done()
 
-    test.done()
+}

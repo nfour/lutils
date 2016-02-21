@@ -9,13 +9,16 @@
     },
 
     "scripts": {
-        "test"      : "nodeunit ./test",
+        "test"      : "nodeunit ./test.js",
         "publicate" : "npm run test && npm publish"
     },
 
     "main": "./clone",
 
+    "dependencies": {
+        "lutils-typeof" : "0.1.x"
+    },
     "devDependencies": {
-        "nodeunit": "^0.9.0"
+        "nodeunit"      : "^0.9.0"
     }
 }

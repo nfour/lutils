@@ -1,104 +1,116 @@
-# LUtils
-A few very robust utilities.
+# merge `lutils-merge`
+Merge javascript objects recursively
 
-- **merge** Merges two objects together deeply
-- **merge.white** Merge two objects together, but only properties that exist
-- **merge.black** Merge two objects together, but only properties that do not exist
-- **typeOf** Consistantly gets the type of a value as a string
-- **typeOf[type]** Shortcut function which returns a bool
-- **clone** *Reliably* deep clones an object or array, recursively
-
-
-Include all or be selective.
-```coffee
-{ clone, merge, typeOf } = require 'lutils'
-
-typeOf = require 'lutils/typeOf'
+`merge`, `merge.white`, `merge.black` supports these patterns:
+```js
+merge(obj1, obj2, obj3, ...)
+merge([obj1, obj2, obj3, ...], options)
+merge(obj1, obj2, obj3, ..., function(params) {
+	return params.key !== 'keyIReallyDontWant'
+})
 ```
 
+## API
 
-#### clone( value, ?depth = 8?, ?types = [ 'object', 'array' ]? )
-Clones an object or array as deep as depth.
+### `merge()`
+Merges all objects into first object.
 
-Values which will still remain as references:
-- Functions
-- Object's `__proto__` (such as `class` instances)
-- Any property after `depth` is reached
+```js
+var obj1 = { a: 1, b: { c: 1 } }
+var obj2 = { a: 2, b: { d: 2 } }
+var obj3 = { e: function() {} }
 
-To clone a function you should explicitly:
-```coffee
-fn = oldFn.bind()
-# or
-fn = -> oldFn.apply this, arguments
+// Merges objects obj2 then obj3 into obj1
+merge(obj1, obj2, obj3)
+/*
+	{
+		a: 2, b: { c: 1, d: 2 },
+		e: function() {}
+	}
+*/
 
-merge fn, oldFn # Merge in any own properties of the function
+// Use options to customize merge behaviour
+merge([
+	{ a: { c: 1 } }, { a: { b: 2 }, d: 1 }
+], { depth: 1 })
+/*
+	{ a: { b: 2 }, d: 1 }
+*/
 ```
 
-#### merge( object1, object2, ?depth = 8?, ?types = [ 'object' ]? )
-Merge the second object into the first recursively until depth is reached for each property, replacing object1's values with those in object2.
+### `merge.white()`
+Merges all objects into first object only if there **is** a key match.
 
-`types` is an array of types that, when matched on a value, will be iterated over and merged in. This means you can merge a function's properties or an array's properties recursively, thus preserving pointer references to the first object's instance.
-
-```coffee
-fn1 = -> return 'fn1' + fn1.prop.b
-fn1.prop = { a: 1 }
-
-fn2 = -> return 'fn2' + fn2.prop.a
-fn2.prop = { b: 2 }
-
-obj1 = { a: { b: { fn: fn1 } } }
-obj2 = { a: { b: { fn: fn2 } } }
-
-merge obj1, obj2
-# >> { a: { b: { fn: [Function] } } }
-
-obj1.a.b.fn.prop
-# >> { a: 1, b: 2 }
-
-obj1.a.b.fn()
-# 'fn1!2'
+```js
+merge.white(
+	{ a: 1 },
+	{ a: 2, b: 2 }
+)
+/*
+	{ a: 2 }
+*/
 ```
 
-#### merge.white( object1, object2, depth = 8, iterators = [ 'object' ] )
-Whitelisted merge.
-Merges properties into object1 from object only if the property exists in object1
+### `merge.black()`
+Merges all objects into first object only if there **isn't** a key match.
 
-#### merge.black( object1, object2, depth = 8, iterators = [ 'object' ] )
-Blacklisted merge.
-Merges properties into object1 from object only if the property *doesnt* exist in object1
-
-#### typeOf( value )
-Returns the primitive type of a value as a lowercase string, very reliable.
-To be used in combination with `instanceof` and `object.constructor.name` when necessary.
-
-```coffee
-typeOf 'a string' # >> 'object'
-typeOf { an: { object: null } } # >> 'object'
-typeOf null # >> 'null'
-typeOf 0 # >> 'number'
+```js
+merge.black(
+	{ a: 1 },
+	{ a: 2, b: 2 }
+)
+/*
+	{ a: 1, b: 2 }
+*/
 ```
 
-Also has helper properties which return a boolean.
+## Advanced usage
 
-#### typeOf[type]( value )
+### Options
+```js
+{
+	// Decremented with each recursion for each nested object, halting the merge at 0
+	depth: 8,
 
-```coffee
-typeOf.RegExp 'not regex' # false
-typeOf.Object null # false
-typeOf.Array [] # true
+	// Determines whether recursing will occur. When this type matches, it will be iterated over.
+	types: { object: true, array: true }
+	types: [ "object", "array" ] // Can also be an array of type strings
 
-###
-Avaliable properties (Also avaliable in lowercase):
-	typeOf.Undefined
-	typeOf.Boolean
-	typeOf.String
-	typeOf.Function
-	typeOf.Array
-	typeOf.Object
-	typeOf.Null
-	typeOf.Number
-	typeOf.Date
-	typeOf.RegExp
-	typeOf.NaN
-###
+	// See "Test functions" below
+	test: function(params) {}
+}
+```
+
+### Test Functions
+When merging, a test function can be specified in two ways:
+
+```js
+merge(obj1, obj2, function() {})
+merge([obj1, obj2], { test: function() {} })
+```
+
+The test function is supplied paramaters for each iteration through the merge.
+```js
+merge(obj1, obj2, function(params) {
+	params.iterated // The object being iterated over
+	params.key // The key being iterated over in `interated`
+	params.obj1 // The object being mutated
+	params.obj2 // The object supplying mutations
+	params.depth // Current depth
+	params.options // Initially supplied/generated options
+	params.recursing // When `true`, this function determines whether to recurse down another level
+	params.assigning // When `true`, this function determines whether a value will be assigned to `obj1`
+
+	// `recursing` and `assigning` are mutally exclusive
+})
+
+```
+
+For example; `merge.white` is defined with this test function:
+```js
+function(params) {
+	if ( params.recursing ) return true
+
+	return params.key in params.obj2
+}
 ```

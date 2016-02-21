@@ -1,5 +1,5 @@
-var merge = require('./merge')
-var typeOf = require('../typeOf')
+var merge  = require('./merge')
+var typeOf = require('lutils-typeof')
 
 exports["merge"] = function(test) {
     var expected = {
@@ -27,7 +27,7 @@ exports["merge"] = function(test) {
     test.ok(merged2.a.x === 1)
     test.ok(merged2.a.b === 2)
     test.ok(merged2.f === 1)
-    
+
     test.done()
 }
 
