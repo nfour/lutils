@@ -8,15 +8,9 @@
         "url"  : "https://github.com/nfour/lutils"
     },
 
-    "scripts": {
-        "test"      : "nodeunit ./test",
-        "publicate" : "npm run test && npm publish"
-    },
-
     "main": "./index",
 
     "devDependencies": {
-        "nodeunit"     : "^0.9.0",
-        "babel-eslint" : "latest"
+        "nodeunit"     : "^0.9.0"
     }
 }

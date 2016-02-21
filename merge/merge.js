@@ -10,6 +10,7 @@ var typeOf = require('../typeOf')
     @param types {Array} Array of types to iterate over. Defaults to ['object']
     @return obj1
 */
+
 var merge = function() {
     var options = parseOptions(arguments)
 
@@ -68,19 +69,18 @@ function reducer(options) {
 }
 
 function parseOptions(args) {
-    var options = {}
-    ,   defaults = {
+    var options = {
         depth: 8,
         types: { object: true, array: true },
         tests: []
-    };
+    }
 
     args = Array.prototype.slice.call(args)
 
     if ( typeOf.Array(args[0]) ) {
         if ( args[1] ) {
-            options.depth = args[1].depth || defaults.depth
-            options.types = castTypes( args[1].types || defaults.types )
+            options.depth = args[1].depth || options.depth
+            options.types = castTypes( args[1].types || options.types )
             options.tests = [ args[1].test ]
         }
 
@@ -89,11 +89,19 @@ function parseOptions(args) {
         options.objects = args
     }
 
-    options = options || defaults
-
     return options
 }
 
+/**
+ *  Iterates over two objects based on supplied options
+ *
+ *  @param     {Object}    obj1
+ *  @param     {Object}    obj2
+ *  @param     {Number}    depth
+ *  @param     {Object}    options
+ *
+ *  @return    {Object}
+ */
 function iterate(obj1, obj2, depth, options) {
     if ( --depth <= 0 ) return obj1
 
@@ -112,7 +120,7 @@ function iterate(obj1, obj2, depth, options) {
             key      : key,
             depth    : depth,
             options  : options,
-            iterable: false
+            iterable : false
         }
 
         if (
@@ -133,9 +141,9 @@ function iterate(obj1, obj2, depth, options) {
     return obj1
 }
 
-function runTests(tests, args) {
+function runTests(tests, options) {
     for ( var i in tests )
-        if ( tests[i].apply(null, args) ) return false
+        if ( ! tests[i](options) ) return false
 
     return true
 }

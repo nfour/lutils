@@ -1,11 +1,11 @@
 {
-    "name"        : "lutils-typeOf",
+    "name"        : "lutils-typeof",
     "description" : "Reliable type checks for javascript primitives",
-    "version"     : "0.1.0",
+    "version"     : "0.1.1",
     "author"      : { "name": "nfour" },
     "repository"  : {
         "type" : "git",
-        "url"  : "https://github.com/nfour/lutils-typeOf"
+        "url"  : "https://github.com/nfour/lutils-typeof"
     },
 
     "scripts": {
