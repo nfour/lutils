@@ -1,5 +1,5 @@
 # Lutils `lutils`
-A few reliable utils.
+A few reliable utils. Browser-friendly.
 
 ```js
 import { typeOf, merge, clone } from 'lutils'
