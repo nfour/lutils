@@ -1,7 +1,7 @@
 {
     "name"        : "lutils",
     "description" : "A few reliable utils.",
-    "version"     : "1.0.0",
+    "version"     : "1.0.1",
     "author"      : { "name": "nfour" },
     "repository"  : {
         "type" : "git",
@@ -11,9 +11,9 @@
     "main": "./index",
 
     "dependencies": {
-        "lutils-typeof": "latest",
-        "lutils-merge" : "latest",
-        "lutils-clone" : "latest"
+        "lutils-typeof": "^0.1.0",
+        "lutils-merge" : "^0.1.0",
+        "lutils-clone" : "^0.1.0"
     },
     "devDependencies": {
         "nodeunit"     : "^0.9.0"

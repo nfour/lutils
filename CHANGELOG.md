@@ -1,3 +1,7 @@
+### `1.0.1` April 23rd
+- Tidy up
+- Constrain versions
+
 ### `1.0.0`
 - Rebuilt lutils, splitting each function off
 	- `lutils-typeof`
