@@ -1,5 +1,3 @@
-module.exports = {
-    typeOf : require('lutils-typeof'),
-    merge  : require('lutils-merge'),
-    clone  : require('lutils-clone'),
-}
+exports.typeOf = require('lutils-typeof')
+exports.merge  = require('lutils-merge')
+exports.clone  = require('lutils-clone')
