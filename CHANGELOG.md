@@ -1,4 +1,7 @@
-### `1.0.1` April 23rd
+### `1.2.0` August 7th 2016
+- Version bumps
+
+### `1.0.1` April 23rd 2016
 - Tidy up
 - Constrain versions
 
