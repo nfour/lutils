@@ -1,7 +1,7 @@
 {
     "name"        : "lutils",
     "description" : "A few reliable utils.",
-    "version"     : "1.2.0",
+    "version"     : "1.2.1",
     "author"      : { "name": "nfour" },
     "repository"  : {
         "type" : "git",
@@ -11,14 +11,16 @@
     "main": "./index",
 
     "dependencies": {
-        "lutils-typeof": "^0.2.2",
-        "lutils-merge" : "^0.2.1",
-        "lutils-clone" : "^0.1.5"
+        "lutils-typeof": "^0.2.3",
+        "lutils-merge" : "^0.2.2",
+        "lutils-clone" : "^0.1.6"
     },
 
     "devDependencies": {
         "nodeunit"     : "^0.9.0",
         "babel-eslint" : "~6.0.2",
         "eslint"       : "~2.7.0"
-    }
+    },
+
+    "keywords": [ "merge", "clone", "type", "recursive", "assign", "deep", "immutable", "mutate", "typeof" ]
 }
