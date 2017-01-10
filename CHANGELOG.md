@@ -1,3 +1,6 @@
+### `1.2.5` Jan 10th 2017
+- Adding typings
+
 ### `1.2.0` August 7th 2016
 - Version bumps
 
