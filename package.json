@@ -1,26 +1,32 @@
 {
-    "name"        : "lutils",
-    "description" : "A few reliable utils.",
-    "version"     : "1.2.2",
-    "author"      : { "name": "nfour" },
-    "repository"  : {
-        "type" : "git",
-        "url"  : "https://github.com/nfour/lutils"
+    "name": "lutils",
+    "description": "A few reliable utils.",
+    "version": "1.2.3",
+    "author": {
+        "name": "nfour"
     },
-
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nfour/lutils"
+    },
     "main": "./index",
-
+    "files": [
+        "index.js"
+    ],
     "dependencies": {
-        "lutils-typeof": "^0.2.3",
-        "lutils-merge" : "^0.2.2",
-        "lutils-clone" : "^0.1.7"
+        "lutils-typeof": "~0.2.4",
+        "lutils-merge": "~0.2.6",
+        "lutils-clone": "~0.1.8"
     },
-
-    "devDependencies": {
-        "nodeunit"     : "^0.9.0",
-        "babel-eslint" : "~6.0.2",
-        "eslint"       : "~2.7.0"
-    },
-
-    "keywords": [ "merge", "clone", "type", "recursive", "assign", "deep", "immutable", "mutate", "typeof" ]
+    "keywords": [
+        "merge",
+        "clone",
+        "type",
+        "recursive",
+        "assign",
+        "deep",
+        "immutable",
+        "mutate",
+        "typeof"
+    ]
 }
