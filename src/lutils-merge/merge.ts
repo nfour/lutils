@@ -36,6 +36,7 @@ const tests = {
   },
 };
 
+// TODO: fix all the types
 export class Merge implements IMergeOptions {
   public depth = 8;
   public types = { object: true, array: true };
@@ -61,6 +62,7 @@ export class Merge implements IMergeOptions {
 
     const iterated = this.iterateTarget ? obj1 : obj2;
 
+    // TODO: make this a for i loop
     for (const key in iterated) {
       if (! obj2.hasOwnProperty(key)) continue;
 
@@ -75,7 +77,7 @@ export class Merge implements IMergeOptions {
         depth,
         options,
         assigning: false,
-        recursing: false,
+        recursing: false, // TODO: reduce these options a fuck load
       };
 
       if (
@@ -83,7 +85,7 @@ export class Merge implements IMergeOptions {
         (obj1Type in options.types)
       ) {
         testOptions.recursing = true;
-        if (! _runTests(options.tests, testOptions)) continue;
+        if (! _runTests(options.tests, testOptions)) continue; // TODO: use .every
 
         _iterate(obj1[key], obj2[key], depth, options);
       } else {
