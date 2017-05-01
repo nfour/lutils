@@ -1,3 +1,6 @@
 /node_modules
+/dist
 npm-debug*
-yarn.lock
+yarn*
+npm-*
+.coverage

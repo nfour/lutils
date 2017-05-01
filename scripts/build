@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Clean
+rm -rf dist
+mkdir dist
+
+# Copy latent, belonging to the index module
+rsync -am --include '*' . ./dist/lutils
+
+# Build typescript
+yarn tsc
+
+# Copy latent files from source, recursively
+rsync -arm --exclude '*.ts' ./src ./dist
