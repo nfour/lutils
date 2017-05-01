@@ -1,48 +1,46 @@
-var typeOf = require('./typeOf')
+import { typeOf } from "./typeOf";
 
-var samples = [
-    [ 'undefined', undefined ],
-    [ 'boolean', true ],
-    [ 'string', '""' ],
-    [ 'function', function() {} ],
-    [ 'array', [] ],
-    [ 'object', {} ],
-    [ 'null', null ],
-    [ 'number', 0 ],
-    [ 'number', Infinity ],
-    [ 'date', new Date() ],
-    [ 'regexp', /a/ ],
-    [ 'nan', NaN ],
-]
+const samples: [[string, any]] = [
+  ["undefined", undefined],
+  ["boolean", true],
+  ["string", '""'],
+  ["function", () => null],
+  ["array", []],
+  ["object", {}],
+  ["null", null],
+  ["number", 0],
+  ["number", Infinity],
+  ["date", new Date()],
+  ["regexp", /a/],
+  ["nan", NaN],
+];
 
-var typeKeys = [
-    'Undefined',
-    'Boolean',
-    'String',
-    'Function',
-    'Array',
-    'Object',
-    'Null',
-    'Number',
-    'Date',
-    'RegExp',
-    'NaN',
-]
+const typeKeys = [
+  "Undefined",
+  "Boolean",
+  "String",
+  "Function",
+  "Array",
+  "Object",
+  "Null",
+  "Number",
+  "Date",
+  "RegExp",
+  "NaN",
+];
 
-samples.forEach(function(sample, index) {
-    var key   = sample[0]
-    var value = sample[1]
+samples.forEach((sample, index) => {
+  const fnKey = sample[0];
+  const value = sample[1];
 
-    exports[index + " - typeOf." + key] = function(test) {
-        test.ok( typeOf(value) === key )
+  it(`${index} typeOf.${fnKey}`, (test) => {
+    expect(typeOf(value) === fnKey).toBe(true);
 
-        var upperKey = typeKeys.filter(function(_key) {
-            return _key.toLowerCase() === key
-        })[0]
+    const upperKey = typeKeys.filter((k) => {
+      return k.toLowerCase() === fnKey;
+    })[0];
 
-        test.ok( typeOf[ key ](value) )
-        test.ok( typeOf[ upperKey ](value) )
-
-        test.done()
-    }
-})
+    expect((typeOf[fnKey](value))).toBe(true);
+    expect((typeOf[upperKey](value))).toBe(true);
+  });
+});

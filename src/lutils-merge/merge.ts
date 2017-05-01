@@ -1,189 +1,112 @@
-var typeOf = require('lutils-typeof')
+const typeOf = require("lutils-typeof");
 
-/**
- *  Merges objects together
- */
-function merge() {
-    var options = _parseArguments(arguments)
+import { typeOf } from "../lutils";
 
-    options.tests.unshift(merge.tests.merge)
+export type ITargetObject = object;
 
-    return _reducer(options)
+export interface IMerge {
+  (targetObject: ITargetObject, ...objects: object[]): ITargetObject;
+
+  white?();
+  black?();
 }
 
-/**
- *  Merges objects together, but only when keys dont match
- */
-merge.black = function mergeBlack() {
-    var options = _parseArguments(arguments)
-
-    options.tests.unshift(merge.tests.black)
-
-    return _reducer(options)
+export interface IMergeOptions {
+  depth?: number;
+  types?: { [key: string]: boolean };
+  tests?: Array<() => null>;
+  iterateTarget?: boolean;
 }
 
-/**
- *  Merges objects together, but only when keys match
- */
-merge.white = function mergeWhite() {
-    var options = _parseArguments(arguments)
+const tests = {
+  merge(params) {
+    if (params.assigning) { return true; }
 
-    options.reversed = true
-    options.tests.unshift(merge.tests.white)
+    return params.key in params.obj1;
+  },
+  white(params) {
+    if (params.recursing) { return true; }
 
-    return _reducer(options)
-}
+    return params.key in params.obj2;
+  },
+  black(params) {
+    if (params.recursing) { return true; }
 
-merge.tests = {
-    merge: function(params) {
-        if ( params.assigning ) return true
+    return ! (params.key in params.obj1);
+  },
+};
 
-        return params.key in params.obj1
-    },
-    white: function(params) {
-        if ( params.recursing ) return true
+export class Merge implements IMergeOptions {
+  public depth = 8;
+  public types = { object: true, array: true };
+  public tests: Function[] = [tests.merge];
+  public iterateTarget = false;
 
-        return params.key in params.obj2
-    },
-    black: function(params) {
-        if ( params.recursing ) return true
+  constructor(options?: IMergeOptions) {
+    if (options) { Object.assign(this, options); }
+  }
 
-        return ! ( params.key in params.obj1 )
-    },
-}
+  public merge = (target: ITargetObject, ...objects: object[]): ITargetObject => {
+    const len = objects.length;
 
-module.exports = merge
-
-
-//
-// Private functions
-//
-
-
-function _reducer(options) {
-    var target = options.objects[0]
-    var len    = options.objects.length
-
-    for ( var i = 1; i < len; ++i )
-        _iterate(target, options.objects[i], options.depth, options)
-
-    return target
-}
-
-/**
- *  Parses `arguments` and generates an options config object
- *
- *  @param     {arguments}    args
- *
- *  @return    {Object}       options
- */
-function _parseArguments(args) {
-    var options = {
-        depth: 8,
-        types: { object: true, array: true },
-        tests: []
+    for (let i = 0; i < len; ++i) {
+      this.iterate(target, objects[i], this.depth);
     }
 
-    args = Array.prototype.slice.call(args)
+    return target;
+  }
 
-    if ( typeOf.Array(args[0]) ) {
-        var lastArg = args[ args.length - 1 ]
+  private iterate(obj1: ITargetObject, obj2: object, depth: number) {
+    if (--depth < 0) { return obj1; }
 
-        if ( typeOf.Function(lastArg) ) {
-            options.tests.push(lastArg)
-            args.pop()
-        }
+    const iterated = this.iterateTarget ? obj1 : obj2;
 
-        if ( args[1] ) {
-            options.depth = args[1].depth !== undefined ? args[1].depth : options.depth
-            options.types = _castTypes( args[1].types || options.types )
+    for (const key in iterated) {
+      if (! obj2.hasOwnProperty(key)) continue;
 
-            if ( args[1].test ) options.tests.push(args[1].test)
-        }
+      const obj1Type = typeOf(obj1[key]);
+      const obj2Type = typeOf(obj2[key]);
 
-        options.objects = args[0]
-    } else {
-        options.objects = args
+      const testOptions = {
+        obj1,
+        obj2,
+        iterated,
+        key,
+        depth,
+        options,
+        assigning: false,
+        recursing: false,
+      };
+
+      if (
+        (obj2Type in options.types) &&
+        (obj1Type in options.types)
+      ) {
+        testOptions.recursing = true;
+        if (! _runTests(options.tests, testOptions)) continue;
+
+        _iterate(obj1[key], obj2[key], depth, options);
+      } else {
+        testOptions.assigning = true;
+        if (! _runTests(options.tests, testOptions)) continue;
+
+        obj1[key] = obj2[key];
+      }
     }
 
-    return options
+    return obj1;
+  }
 }
 
-/**
- *  Mutates `obj1` based on `options` recursively
- *
- *  @param     {Object}    obj1
- *  @param     {Object}    obj2
- *  @param     {Number}    depth
- *  @param     {Object}    options
- *
- *  @return    {Object}    obj1
- */
-function _iterate(obj1, obj2, depth, options) {
-    if ( --depth < 0 ) return obj1
+export const merge: IMerge = new Merge().merge;
 
-    var iterated = options.reversed ? obj1 : obj2
+merge.black = new Merge({
+  tests: [tests.black],
+}).merge;
 
-    for ( var key in iterated ) {
-        if ( ! obj2.hasOwnProperty(key) ) continue
+merge.white = new Merge({
+  iterateTarget: true,
+  tests: [tests.white],
+}).merge;
 
-        var obj1Type = typeOf(obj1[key])
-        var obj2Type = typeOf(obj2[key])
-
-        var testOptions = {
-            obj1     : obj1,
-            obj2     : obj2,
-            iterated : iterated,
-            key      : key,
-            depth    : depth,
-            options  : options,
-            assigning: false,
-            recursing: false,
-        }
-
-        if (
-            ( obj2Type in options.types ) &&
-            ( obj1Type in options.types)
-        ) {
-            testOptions.recursing = true
-            if ( ! _runTests(options.tests, testOptions) ) continue
-
-            _iterate(obj1[key], obj2[key], depth, options)
-        } else {
-            testOptions.assigning = true
-            if ( ! _runTests(options.tests, testOptions) ) continue
-
-            obj1[key] = obj2[key]
-        }
-    }
-
-    return obj1
-}
-
-/**
- *  Runs each function in `tests`, returning false if any return falsy
- *
- *  @param     {Array}     tests
- *  @param     {Object}    options
- *
- *  @return    {Boolean}
- */
-function _runTests(tests, options) {
-    for ( var i in tests )
-        if ( ! tests[i](options) ) return false
-
-    return true
-}
-
-/**
- *  Casts `types` to a hash object from an array of type strings
- *
- *  @param     {mixed}    types
- *
- *  @return    {Object}
- */
-function _castTypes(types) {
-    if ( typeOf.Object(types) ) return types
-
-    return types.reduce(function(hash, key) { hash[key] = true; return hash }, {})
-}
+export default merge;

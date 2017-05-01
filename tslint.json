@@ -1,5 +1,16 @@
 {
 	"extends":[
-    "tslint-config-standard"
-  ]
+    "tslint:latest",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    "only-arrow-functions": [false],
+    "arrow-parens": [false],
+    "object-curly-spacing": [ true, "always" ],
+    "space-in-parens": [true, "never"],
+    "no-multi-spaces": [true],
+    "object-literal-sort-keys": false,
+    "object-literal-key-quotes": [ false, "consistent-as-needed" ],
+    "no-console": [false]
+  }
 }
