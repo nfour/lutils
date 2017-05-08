@@ -11,7 +11,9 @@
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "lib": [
-      "es2015"
+      "es2015",
+      "scripthost",
+      "dom"
     ]
   },
   "exclude": [ "dist" ],

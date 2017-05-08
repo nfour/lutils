@@ -1,0 +1,28 @@
+language: node_js
+node_js: ["6.10"]
+
+cache:
+  yarn: true
+
+before_install:
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+
+install:
+  - yarn install
+
+script:
+  - yarn lint
+  - yarn build
+  - DEBUG=true yarn coverage
+
+deploy:
+  provider: script
+  script:
+    - npm run release:typeOf
+    - npm run release:merge
+    - npm run release:clone
+    - npm run release:lutils
+  on:
+    tags: true
+
+# TODO: figure out how to do multi publish

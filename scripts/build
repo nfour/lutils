@@ -7,8 +7,9 @@ mkdir dist
 # Copy latent, belonging to the index module
 rsync -am --include '*' . ./dist/lutils
 
+# Copy latent files from source, recursively
+rsync -arm --exclude '*.ts' ./src ./dist
+
 # Build typescript
 yarn tsc
 
-# Copy latent files from source, recursively
-rsync -arm --exclude '*.ts' ./src ./dist

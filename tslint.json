@@ -4,6 +4,7 @@
     "tslint-eslint-rules"
   ],
   "rules": {
+    "semicolon": [ true, "never" ],
     "only-arrow-functions": [false],
     "arrow-parens": [false],
     "object-curly-spacing": [ true, "always" ],

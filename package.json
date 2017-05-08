@@ -21,10 +21,16 @@
     "lutils-typeof": "~0.2.4"
   },
   "scripts": {
+    "build": "./scripts/build",
+    "test": "jest --config .jestrc src",
     "install:all": "",
-    "install:clone": "cd src/clone; yarn",
-    "install:merge": "cd src/merge; yarn",
-    "install:typeOf": "cd src/typeOf; yarn"
+    "install:clone": "cd src/clone && yarn",
+    "install:merge": "cd src/merge && yarn",
+    "install:typeOf": "cd src/typeOf && yarn",
+    "release:lutils": "cd dist/lutils && npm publish",
+    "release:clone": "cd dist/clone && npm publish",
+    "release:merge": "cd dist/merge && npm publish",
+    "release:typeOf": "cd dist/typeOf && npm publish"
   },
   "keywords": [
     "merge",
