@@ -16,19 +16,19 @@ export interface ITypeOf {
 }
 
 // Primitives
-export const isBoolean = (value): value is boolean => typeof value === "boolean"
+export const isBoolean = (value): value is boolean => typeof value === 'boolean'
 export const isNull = (value): value is null => value === null
 export const isUndefined = (value): value is undefined => value === undefined
-export const isString = (value): value is string => typeof value === "string"
-export const isNumber = (value): value is number => typeof value === "number" && !isNaN(value)
-export const isSymbol = (value): value is Symbol => typeof value === "symbol"
+export const isString = (value): value is string => typeof value === 'string'
+export const isNumber = (value): value is number => typeof value === 'number' && !isNaN(value)
+export const isSymbol = (value): value is Symbol => typeof value === 'symbol'
 
 // Object obfuscated types
-export const isFunction = (value): value is Function => typeof value === "function"
+export const isFunction = (value): value is Function => typeof value === 'function'
 export const isArray = (value): value is any[] => Array.isArray(value)
-export const isObject = (value): value is object => typeOf(value) === "object"
-export const isRegExp = (value): value is RegExp => typeOf(value) === "regexp"
-export const isDate = (value): value is Date => typeOf(value) === "date"
+export const isObject = (value): value is object => typeOf(value) === 'object'
+export const isRegExp = (value): value is RegExp => typeOf(value) === 'regexp'
+export const isDate = (value): value is Date => typeOf(value) === 'date'
 
 export const typeOf: ITypeOf = Object.assign(
   (value: any): string => {
@@ -36,7 +36,7 @@ export const typeOf: ITypeOf = Object.assign(
       .slice(8, -1)
       .toLowerCase()
 
-    if (type === "number" && isNaN(value)) { return "nan" }
+    if (type === 'number' && isNaN(value)) { return 'nan' }
 
     return type
   },

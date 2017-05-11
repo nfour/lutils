@@ -1,77 +1,85 @@
-import { typeOf } from "../lutils-typeof"
+import { typeOf } from '../typeOf'
 
 export class Clone {
-  constructor() {
+  public depth = 10
+  public types = { object: true, array: true }
+  private usingDefaultDepth = true
 
+  constructor(options?: {
+    /** Limit by which cloning ends and references are maintained */
+    depth?: number
+
+    /**
+     * Determines clone behaviour for traversable types:
+     * - When `true`, value is cloned and traversed
+     * - When `false`, references are kept
+     */
+    types?: { object?: boolean, array?: boolean },
+  }) {
+    if (options) {
+      Object.assign(this, options)
+      this.usingDefaultDepth = !('depth' in options)
+    }
   }
-}
 
-/**
- *  Clones an object by iterating over objects and array, re-wrapping them.
- *  Copies over own properties, refrences previous object's __proto__
- *
- *  @param     {mixed}     obj
- *  @param     {Object}    [options]
- *
- *  @return    {mixed}
- */
-function clone(obj, options) {
-  options = options || {}
-  options.depth = options.depth || 8
-  options.types = _castTypes(options.types || { object: true, array: true })
+  /**
+   * Clones an object by traversing over object-like values.
+   * - Cloned: **Array**, **Object**
+   * - Referenced: **Function**, **{}.\_\_proto\_\_**
+   */
+  public clone = <S>(source: S): S => {
+    if (!source) { throw new Error('[ERROR clone] Invalid input') }
 
-  return _iterate(_skeletonize(obj, options), obj, options.depth, options)
-}
+    const subject = this.skeletonize(source)
 
-//
-// Private Functions
-//
+    return this.traverse(subject, source, this.depth)
+  }
 
-function _iterate(obj1, obj2, depth, options) {
-  if (--depth <= 0) return obj1
-
-  // TODO: make this a for i loop of Object.keys()
-  for (const key in obj2) {
-    if (!hasOwnProperty.call(obj2, key)) continue
-
-    let value = obj2[key]
-    const type = typeOf(value)
-
-    if (type in options.types) {
-      const skeleton = _skeletonize(value, { type, types: options.types })
-      value = _iterate(skeleton || value, value, depth, options)
+  private traverse(subject, source, depth: number) {
+    if (--depth < 0) {
+      this.depthWarning()
+      return subject
     }
 
-    obj1[key] = value
+    if (!subject) { subject = source }
+
+    Object.keys(source).forEach((key) => {
+      let value = source[key]
+      const type = typeOf(value)
+
+      if (this.types[type]) {
+        const nextSubject = this.skeletonize(value, type)
+
+        value = this.traverse(nextSubject, value, depth)
+      }
+
+      subject[key] = value
+    })
+
+    return subject
   }
 
-  return obj1
-}
+  private skeletonize(value: any, type?: string) {
+    if (!type) { type = typeOf(value) }
 
-function _skeletonize(value, options) {
-  const type = options.type || typeOf(value)
+    if (!this.types[type]) { return }
 
-  if (!(type in options.types)) return null
-
-  switch (type) {
-    case "object":
+    if (type === 'object') {
       return value.__proto__
         ? Object.create(value.__proto__)
         : {}
 
-    case "array":
+    } else
+    if (type === 'array') {
       return []
+    }
+  }
 
-    default:
-      return null
+  private depthWarning() {
+    if (this.usingDefaultDepth) {
+      console.warn(`[WARNING clone] default depth of ${this.depth} reached. Be explicit, set this manually`)
+    }
   }
 }
 
-function _castTypes(types) {
-  if (typeOf.Object(types)) return types
-
-  return types.reduce(function(hash, key) {
-    hash[key] = true
-    return hash
-  }, {})
-}
+export const clone = new Clone().clone

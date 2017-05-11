@@ -1,110 +1,84 @@
-var merge  = require('./merge')
-var typeOf = require('lutils-typeof')
+import { merge, Merge } from './merge'
 
-exports["merge"] = function(test) {
-    //
-    // Basic merges
-    //
-
-    var expected = {
-        a: { b: {} },
-        c: { },
-        d: 2
+describe('Merge', () => {
+  it('basic merge', () => {
+    const expected = {
+      a: { b: {} },
+      c: { },
+      d: 2,
     }
-    var merged = merge(
-        { c: 'overwriteMe', d: 'overwriteMe' },
-        expected
+
+    const merged = merge(
+      { c: 'overwriteMe', d: 'overwriteMe' },
+      expected,
     )
 
-    test.deepEqual(expected, merged)
-    test.equal(merged.c, expected.c)
-    test.equal(merged.d, 2)
+    expect(merged).toEqual(expected)
+    expect(merged.c).toBe(expected.c)
+    expect(merged.d).toBe(expected.d)
+  })
 
-    var merged2 = merge(
-        { c: 'overwriteMe', d: 'overwriteMe' },
-        { c: 1, d: 1, a: { b: 1 }, f: 1 },
-        { a: { x: 1, b: 2 } }
+  it('basic merge 2', () => {
+    const merged2 = merge(
+      { c: 'overwriteMe', d: 'overwriteMe' },
+      { c: 1, d: 1, a: { b: 1 }, f: 1 },
+      { a: { x: 1, b: 2 } },
     )
 
-    test.equal(merged2.c, 1)
-    test.equal(merged2.d, 1)
-    test.equal(merged2.a.x, 1)
-    test.equal(merged2.a.b, 2)
-    test.equal(merged2.f, 1)
+    expect(merged2.c).toBe(1)
+    expect(merged2.d).toBe(1)
+    expect(merged2.a.x).toBe(1)
+    expect(merged2.a.b).toBe(2)
+    expect(merged2.f).toBe(1)
+  })
 
-    //
-    // Basic Merge depth test
-    //
+  it('merges with depth limits', () => {
+    const subject = { a: { b: 1 } }
 
-    var merged_basic = {
-        a: { b: 1 }
+    new Merge({ depth: 0 }).merge(subject, { a: 1 })
+
+    expect(subject.a).toBe(subject.a)
+
+    new Merge({ depth: 1 }).merge(subject, { a: 1 })
+
+    expect(subject.a).toBe(1)
+  })
+
+  it('preserves references', () => {
+    const subject = {
+      a: { b: { c: 1 } },
     }
 
-    merge([merged_basic, { a: 1 }], { depth: 0 })
-    test.notEqual(merged_basic.a, 1, "basic depth test of 0")
+    const fragment = subject.a.b
 
-    merge([merged_basic, { a: 1 }], { depth: 1 })
-    test.equal(merged_basic.a, 1, "basic depth test of 1")
+    merge(
+      subject,
+      { a: { b: { c: 2 } } },
+    )
 
-    //
-    // Merge depth test
-    //
+    expect(subject.a.b).toBe(fragment)
+  })
 
-    var merged3 = {
-        a: { b: { c: 1 } }
-    }
-
-    var merged3_ab = merged3.a.b
-
-    merge([
-        merged3,
-        {
-            a: { b: { c: 2 } }
-        },
-    ], { depth: 2 })
-
-    test.equal(merged3.a.b.c, 1, "same value")
-    test.equal(merged3.a.b, merged3_ab, "same object reference")
-
-    test.done()
-}
-
-exports["merge.white"] = function(test) {
-    var obj1 = { a: { notIgnored: false } }
-    var obj2 = { a: { notIgnored: true, ignored: true } }
+  it('merge.white', () => {
+    const obj1 = { a: { notIgnored: false } as any }
+    const obj2 = { a: { notIgnored: true, ignored: true } as any }
 
     merge.white(obj1, obj2)
-    test.ok(obj1.a !== obj2.a)
-    test.ok(obj1.a.notIgnored === true)
-    test.ok(obj1.a.ignored === undefined)
-    test.done()
-}
 
-exports["merge.black"] = function(test) {
-    var obj1 = { a: { ignored: true } }
-    var obj2 = { a: { ignored: false, notIgnored: true } }
+    expect(obj1.a).not.toBe(obj2.a)
+    expect(obj1.a.notIgnored).toBe(true)
+    expect(obj1.a.ignored).toBe(undefined)
+  })
+
+  it('merge.black', () => {
+    const obj1 = { a: { ignored: false } as any }
+    const obj2 = { a: { ignored: true, notIgnored: true } as any }
 
     merge.black(obj1, obj2)
-    test.ok(obj1.a !== obj2.a)
-    test.ok(obj1.a.ignored === true)
-    test.ok(obj1.a.notIgnored === true)
-    test.done()
-}
 
-exports["Can be called in all ways"] = function(test) {
-    var obj1 = { a: 1 }
-    var obj2 = { b: 1 }
+    expect(obj1.a).not.toBe(obj2.a)
+    expect(obj1.a.notIgnored).toBe(true)
+    expect(obj1.a.ignored).toBe(false)
+  })
+})
 
-    merge([obj1, obj2], function() { return true })
-
-    test.ok(obj1.b === 1)
-
-    obj1 = { a: 1 }
-    obj2 = { b: 1 }
-
-    merge([obj1, obj2], { depth: 3 }, function() { return false })
-
-    test.ok(obj1.b === undefined)
-
-    test.done()
-}

@@ -15,14 +15,10 @@
     "index.d.ts"
   ],
   "typings": "index.d.ts",
-  "dependencies": {
-    "lutils-clone": "~0.1.8",
-    "lutils-merge": "~0.2.6",
-    "lutils-typeof": "~0.2.4"
-  },
   "scripts": {
     "build": "./scripts/build",
-    "test": "jest --config .jestrc src",
+    "test": "jest src",
+    "test:dist": "jest dist",
     "install:all": "",
     "install:clone": "cd src/clone && yarn",
     "install:merge": "cd src/merge && yarn",
@@ -45,8 +41,11 @@
   ],
   "devDependencies": {
     "@types/jest": "^19.2.2",
-    "jest": "^19.0.2",
-    "ts-jest": "^19.0.14",
+    "lutils-clone": "0",
+    "lutils-merge": "0",
+    "lutils-typeof": "0",
+    "jest": "^20.0.1",
+    "ts-jest": "^20.0.3",
     "tslint": "^5.1.0",
     "tslint-eslint-rules": "^4.0.0",
     "typescript": "^2.3.2"

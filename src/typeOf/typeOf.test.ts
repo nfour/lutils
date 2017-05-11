@@ -1,53 +1,53 @@
-import { typeOf } from "./typeOf"
+import { typeOf } from './typeOf'
 
 const samples = [
   [
-    "isBoolean", "boolean",
+    'isBoolean', 'boolean',
     [true], [null],
   ],
   [
-    "isNull", "null",
+    'isNull', 'null',
     [null], [false],
   ],
   [
-    "isUndefined", "undefined",
+    'isUndefined', 'undefined',
     [undefined], [null],
   ],
   [
-    "isString", "string",
-    ["a"], [null],
+    'isString', 'string',
+    ['a'], [null],
   ],
   [
-    "isNumber", "number",
+    'isNumber', 'number',
     [4, Infinity], [null, NaN],
   ],
   [
-    "isSymbol", "symbol",
-    [Symbol("")], [null],
+    'isSymbol', 'symbol',
+    [Symbol('')], [null],
   ],
   [
-    "isFunction", "function",
+    'isFunction', 'function',
     [() => 1, async () => 1], [null],
   ],
   [
-    "isArray", "array",
+    'isArray', 'array',
     [[]], [null],
   ],
   [
-    "isObject", "object",
+    'isObject', 'object',
     [{}], [null],
   ],
   [
-    "isRegExp", "regexp",
-    [new RegExp("")], [null],
+    'isRegExp', 'regexp',
+    [new RegExp('')], [null],
   ],
   [
-    "isDate", "date",
+    'isDate', 'date',
     [new Date()], [null],
   ],
 ]
 
-describe("typeOf", () => {
+describe('typeOf', () => {
   samples.forEach(([fnKey, type, goodValues, badValues]: [string, string, any[], any[]]) => {
     it(`typeOf.${fnKey}`, () => {
       goodValues.forEach((value) => {

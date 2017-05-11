@@ -1,61 +1,91 @@
-var typeOf = require('lutils-typeof')
-var clone = require('./clone')
+import { clone, Clone } from './clone'
 
-var inspect = function(val) {
-    return require('util').inspect(val, { depth: 5, colors: true, showHidden : true })
-}
+describe('clone', () => {
+  let regex
+  let Class
 
-exports["clone"] = function(test) {
-    var regex, Class
+  const payload = <any> {
+    z: { d: { b: 1 } },
+    a: [
+      {}, {
+        b: regex = /aaa/i,
+        c: (function() {
+          let fn
+          fn = function() {
+            return true
+          }
 
-    var expected = {
-        a: [
-            1, {
-                b: regex = /aaa/i,
-                c: (function() {
-                    var fn
-                    fn = function() {
-                        return true
-                    }
+          fn.b = function() {
+            return fn()
+          }
 
-                    fn.b = function() {
-                        return fn()
-                    }
+          fn.o = {}
+          fn.o2 = {
+            x: { z: 1 },
+          }
 
-                    fn.obj = {}
+          return fn
+        })(),
+        d: Class = (function() {
+          function Test() {
+            this.val = true
+          }
 
-                    return fn
-                })(),
-                d: Class = (function() {
-                    function Test() {
-                        this.val = true
-                    }
+          Test.prototype.a = function() {
+            return this.val
+          }
 
-                    Test.prototype.a = function() {
-                        return this.val
-                    }
+          return Test
 
-                    return Test
+        })(),
+        e: new Class(),
+      },
+    ],
+  }
 
-                })(),
-                e: new Class()
-            }
-        ]
-    }
+  it('clones (default)', () => {
+    const actual = clone(payload)
 
+    expect(actual).not.toBe(payload)
 
-    var actual = clone(expected, { types: ['object', 'array', 'function'] })
+    expect(actual).toEqual(payload)
 
-    console.log( 'expected', inspect(expected) )
-    console.log( 'actual', inspect(actual) )
+    // Arrays - cloned
+    expect(actual.a).not.toBe(payload.a)
 
-    test.ok( typeOf.Function(actual.a[1].c) )
-    test.ok( actual.a[1].c === expected.a[1].c )
-    test.ok( new actual.a[1].d().a() )
-    test.ok( actual.a[1].e.a() )
-    test.ok( actual.a !== expected.a )
-    test.ok( actual.a[1] !== expected.a[1] )
-    
-    return test.done()
+    // Objects - cloned
+    expect(actual.a[1]).not.toBe(payload.a[1])
 
-}
+    // Regex - reference
+    expect(actual.a[1].b).toBe(payload.a[1].b)
+
+    // Functions - reference
+    expect(actual.a[1].c).toBe(payload.a[1].c)
+
+    // Function props - reference
+    expect(actual.a[1].c.o).toBe(payload.a[1].c.o)
+
+    // Classes - cloned
+    expect(actual.a[1].d).toBe(payload.a[1].d)
+    expect(actual.a[1].e).not.toBe(payload.a[1].e)
+
+    // __proto__ - referenced
+    expect(actual.a[1].d.__proto__).toBe(payload.a[1].d.__proto__)
+    expect(actual.a[1].e.__proto__).toBe(payload.a[1].e.__proto__)
+  })
+
+  it('clones at arbitrary depth')
+  it('can be configured to not clone arrays', () => {
+    const actual = new Clone({
+      types: { object: true, array: false },
+    }).clone(payload)
+
+    expect(actual).not.toBe(payload)
+
+    expect(actual).toEqual(payload)
+
+    expect(actual.a).toBe(payload.a)
+    expect(actual.z).not.toBe(payload.z)
+    expect(actual.z.d).not.toBe(payload.z.d)
+  })
+})

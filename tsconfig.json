@@ -5,14 +5,10 @@
     "moduleResolution": "node",
     "outDir":"./dist",
     "declaration": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "allowSyntheticDefaultImports": true,
-    "strictNullChecks": true,
+    "sourceMap": true,
     "noUnusedLocals": true,
     "lib": [
       "es2015",
-      "scripthost",
       "dom"
     ]
   },
