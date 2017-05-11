@@ -1,8 +1,12 @@
 import { typeOf } from '../typeOf'
 
+export interface ICloneTypes {
+  object?: boolean, array?: boolean
+}
+
 export class Clone {
   public depth = 10
-  public types = { object: true, array: true }
+  public types: ICloneTypes = { object: true, array: true }
   private usingDefaultDepth = true
 
   constructor(options?: {
@@ -14,10 +18,11 @@ export class Clone {
      * - When `true`, value is cloned and traversed
      * - When `false`, references are kept
      */
-    types?: { object?: boolean, array?: boolean },
+    types?: ICloneTypes,
   }) {
     if (options) {
-      Object.assign(this, options)
+      Object.keys(options).forEach((key) => this[key] = options[key])
+
       this.usingDefaultDepth = !('depth' in options)
     }
   }

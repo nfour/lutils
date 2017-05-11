@@ -28,9 +28,16 @@ export interface IMerge {
   <T, S1>(t: T, s1: S1): S1 & T
 }
 
+export interface IMergeTypes {
+  object?: boolean
+  array?: boolean
+  function?: boolean
+  date?: boolean
+}
+
 export class Merge {
   public depth = 10
-  public types = { object: true, array: true, function: false }
+  public types: IMergeTypes = { object: true, array: true }
   public test: IMergeTest = tests.merge
   public traverseTargetKeys = false
   private alwaysPass: boolean
@@ -43,7 +50,7 @@ export class Merge {
     traverseTargetKeys?: boolean,
   }) {
     if (options) {
-      Object.assign(this, options)
+      Object.keys(options).forEach((key) => this[key] = options[key])
 
       // Used to emit warnings
       this.usingDefaultDepth = !('depth' in options)
@@ -111,12 +118,13 @@ export const mergeWhite = new Merge({
   traverseTargetKeys: true,
 }).merge as <T>(target: T, ...s: object[]) => T
 
-export const merge = Object.assign(
-  new Merge().merge,
-  {
-    black: mergeBlack,
-    white: mergeWhite,
-  },
-)
+export interface IMergeFn extends IMerge {
+  black: IMerge
+  white: IMerge
+}
+
+export const merge: IMergeFn = <any> new Merge().merge
+merge.black = mergeBlack
+merge.white = mergeWhite
 
 export default merge
