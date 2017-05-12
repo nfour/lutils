@@ -19,6 +19,7 @@
     "build": "./scripts/build",
     "test": "jest src",
     "lint": "tslint src/**/*.ts",
+    "lint:types": "tslint src/**/*.ts --type-check --project src",
     "test:dist": "jest dist",
     "install:all": "",
     "install:clone": "cd src/clone && yarn",

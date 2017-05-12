@@ -52,13 +52,24 @@ describe('typeOf', () => {
   samples.forEach(([fnKey, type, goodValues, badValues]: [string, string, any[], any[]]) => {
     it(`typeOf.${fnKey}`, () => {
       goodValues.forEach((value) => {
-        expect(typeOf(value) === type).toBe(true)
+        expect(typeOf(value)).toBe(type)
         expect((typeOf[fnKey](value))).toBe(true)
       })
 
       badValues.forEach((value) => {
-        expect(typeOf(value) === type).toBe(false)
+        expect(typeOf(value)).not.toBe(type)
         expect((typeOf[fnKey](value))).toBe(false)
+
+        samples.forEach((counterSample) => {
+          if (counterSample[0] === fnKey) { return }
+
+          const counterValues: any = counterSample[2]
+
+          counterValues.forEach((counterValue) => {
+            expect(typeOf(counterValue)).not.toBe(type)
+            expect((typeOf[fnKey](counterValue))).toBe(false)
+          })
+        })
       })
     })
   })

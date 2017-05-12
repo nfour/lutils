@@ -7,7 +7,7 @@ export interface ITypeOf {
   isUndefined: (value: any) => value is undefined
   isString: (value: any) => value is string
   isNumber: (value: any) => value is number
-  isSymbol: (value: any) => value is Symbol
+  isSymbol: (value: any) => value is symbol
   isFunction: (value: any) => value is Function
   isArray: (value: any) => value is any[]
   isObject: (value: any) => value is object
@@ -21,7 +21,7 @@ export const isNull = (value): value is null => value === null
 export const isUndefined = (value): value is undefined => value === undefined
 export const isString = (value): value is string => typeof value === 'string'
 export const isNumber = (value): value is number => typeof value === 'number' && !isNaN(value)
-export const isSymbol = (value): value is Symbol => typeof value === 'symbol'
+export const isSymbol = (value): value is symbol => typeof value === 'symbol'
 
 // Object obfuscated types
 export const isFunction = (value): value is Function => typeof value === 'function'
@@ -30,20 +30,33 @@ export const isObject = (value): value is object => typeOf(value) === 'object'
 export const isRegExp = (value): value is RegExp => typeOf(value) === 'regexp'
 export const isDate = (value): value is Date => typeOf(value) === 'date'
 
-export const typeOf: ITypeOf = Object.assign(
-  (value: any): string => {
-    const type = Object.prototype.toString.call(value)
+export const typeOf: ITypeOf = (() => {
+  const toString = Object.prototype.toString
+
+  const fn: any = (value: any): string => {
+    // For performance
+    if (typeof value === 'number' && isNaN(value)) { return 'nan' }
+
+    const type = toString.call(value)
       .slice(8, -1)
       .toLowerCase()
 
-    if (type === 'number' && isNaN(value)) { return 'nan' }
-
     return type
-  },
-  {
-    isBoolean, isNull, isUndefined, isString, isNumber, isSymbol,
-    isFunction, isArray, isObject, isRegExp, isDate,
-  },
-)
+  }
+
+  fn.isBoolean = isBoolean
+  fn.isNull = isNull
+  fn.isUndefined = isUndefined
+  fn.isString = isString
+  fn.isNumber = isNumber
+  fn.isSymbol = isSymbol
+  fn.isFunction = isFunction
+  fn.isArray = isArray
+  fn.isObject = isObject
+  fn.isRegExp = isRegExp
+  fn.isDate = isDate
+
+  return fn
+})()
 
 export default typeOf

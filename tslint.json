@@ -13,6 +13,7 @@
     "quotemark": [ true, "single" ],
     "semicolon": [ true, "never" ],
     "only-arrow-functions": [false],
+    "curly": true,
     "arrow-parens": [false],
     "object-curly-spacing": [ true, "always" ],
     "space-in-parens": [true, "never"],
