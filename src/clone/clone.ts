@@ -9,7 +9,7 @@ export class Clone {
   public types: ICloneTypes = { object: true, array: true }
   private usingDefaultDepth = true
 
-  constructor(options?: {
+  constructor (options?: {
     /** Limit by which cloning ends and references are maintained */
     depth?: number
 
@@ -40,7 +40,7 @@ export class Clone {
     return this.traverse(subject, source, this.depth)
   }
 
-  private traverse(subject, source, depth: number) {
+  private traverse (subject, source, depth: number) {
     if (--depth < 0) {
       this.depthWarning()
       return subject
@@ -64,7 +64,7 @@ export class Clone {
     return subject
   }
 
-  private skeletonize(value: any, type?: string) {
+  private skeletonize (value: any, type?: string) {
     if (!type) { type = typeOf(value) }
 
     if (!this.types[type]) { return }
@@ -80,7 +80,7 @@ export class Clone {
     }
   }
 
-  private depthWarning() {
+  private depthWarning () {
     if (this.usingDefaultDepth) {
       console.warn(`[WARNING clone] default depth of ${this.depth} reached. Be explicit, set this manually`)
     }

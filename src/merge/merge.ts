@@ -10,13 +10,13 @@ export type IMergeTest = (params: {
 }) => boolean
 
 const tests: { [key: string]: IMergeTest } = {
-  merge({ isTraversal, obj1, key }) {
+  merge ({ isTraversal, obj1, key }) {
     return !isTraversal || key in obj1
   },
-  white({ isTraversal, key, obj2 }) {
+  white ({ isTraversal, key, obj2 }) {
     return isTraversal || key in obj2
   },
-  black({ isTraversal, key, obj1 }) {
+  black ({ isTraversal, key, obj1 }) {
     return isTraversal || !(key in obj1)
   },
 }
@@ -43,7 +43,7 @@ export class Merge {
   private alwaysPass: boolean
   private usingDefaultDepth = true
 
-  constructor(options?: {
+  constructor (options?: {
     depth?: number
     types?: { object: boolean, array: boolean, function: boolean }
     test?: IMergeTest
@@ -70,7 +70,7 @@ export class Merge {
     return target
   }
 
-  private traverse(obj1: IObject, obj2: IObject, depth: number): IObject {
+  private traverse (obj1: IObject, obj2: IObject, depth: number): IObject {
     if (--depth < 0) {
       this.depthWarning()
       return obj1
@@ -102,7 +102,7 @@ export class Merge {
     })
   }
 
-  private depthWarning() {
+  private depthWarning () {
     if (this.usingDefaultDepth) {
       console.warn(`[WARNING merge] default depth of ${this.depth} reached. Be explicit, set this manually`)
     }

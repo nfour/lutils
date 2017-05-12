@@ -15,6 +15,7 @@ const samples = [
   ],
   [
     'isString', 'string',
+    // tslint:disable-next-line:trailing-comma
     ['a'], [null],
   ],
   [

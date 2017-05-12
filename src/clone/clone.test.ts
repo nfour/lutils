@@ -9,13 +9,13 @@ describe('clone', () => {
     a: [
       {}, {
         b: regex = /aaa/i,
-        c: (function() {
+        c: (function () {
           let fn
-          fn = function() {
+          fn = function () {
             return true
           }
 
-          fn.b = function() {
+          fn.b = function () {
             return fn()
           }
 
@@ -26,12 +26,12 @@ describe('clone', () => {
 
           return fn
         })(),
-        d: Class = (function() {
-          function Test() {
+        d: Class = (function () {
+          function Test () {
             this.val = true
           }
 
-          Test.prototype.a = function() {
+          Test.prototype.a = function () {
             return this.val
           }
 

@@ -1,9 +1,11 @@
 {
 	"extends":[
     "tslint:latest",
-    "tslint-eslint-rules"
+    "tslint-eslint-rules",
+    "tslint-config-standard"
   ],
   "rules": {
+    "trailing-comma": [true, { "multiline": "always", "singleline": "never" }],
     "ordered-imports": [ false ],
     "no-angle-bracket-type-assertion": [false],
     "no-object-literal-type-assertion": [false],
