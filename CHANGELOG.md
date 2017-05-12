@@ -1,3 +1,26 @@
+### `2.1.1` May 12th 2017
+
+**Breaking changes**:
+- [x] No more seperate npm modules for each function, only `lutils`
+- [x] `typeOf.Boolean` etc. are renamed to `isBoolean` and exported individually
+- [x] `merge` api simplified to only `merge(subject, ...sources[])`
+- [x] `clone` api simplified to only `clone(subject)`
+
+**New features**:
+- [x] Full rewrite in Typescript, providing intellisense
+- [x] Performance increases:
+		- `typeOf` performance improved by **~220%**!!!
+		- `merge` performance improved by **~30%**!
+		- `clone` performance on par.
+- [x] `typeOf` functions can act as type guards in typescript & Flow 
+- [x] `Merge` provides a constructor for configuration
+- [x] `Clone` provides a constructor for configuration
+- [x] `Merge` and `Clone` have added warnings:
+		- When default `depth` is hit
+		- When invalid parameters are supplied
+
+-----------------------------
+
 ### `1.2.5` Jan 10th 2017
 - Adding typings
 

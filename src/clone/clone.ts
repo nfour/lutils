@@ -33,7 +33,7 @@ export class Clone {
    * - Referenced: **Function**, **{}.\_\_proto\_\_**
    */
   public clone = <S>(source: S): S => {
-    if (!source) { throw new Error('[ERROR clone] Invalid input') }
+    if (!source) { throw new Error('[ERROR clone] Invalid parameters') }
 
     const subject = this.skeletonize(source)
 

@@ -60,14 +60,17 @@ export class Merge {
     this.alwaysPass = !this.test
   }
 
-  public merge: IMerge = (target, ...sources) => {
+  /** Recursively merges `sources` objects into `subject` */
+  public merge: IMerge = (subject, ...sources) => {
     const len = sources.length
 
+    if (!subject || !sources.length) { throw new Error('[ERROR merge] Invalid parameters') }
+
     for (let i = 0; i < len; ++i) {
-      this.traverse(target, sources[i], this.depth)
+      this.traverse(subject, sources[i], this.depth)
     }
 
-    return target
+    return subject
   }
 
   private traverse (obj1: IObject, obj2: IObject, depth: number): IObject {
