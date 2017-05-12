@@ -6,7 +6,7 @@
 
 # `lutils`
 
-_**✓** TypesSript documented_
+✓ _TypesSript documented_
 
 - [merge](#merge) for deep merging of objects
 - [clone](#clone) for deep cloning of objects & arrays
