@@ -10,10 +10,6 @@
     "url": "https://github.com/nfour/lutils"
   },
   "main": "./index",
-  "files": [
-    "index.js",
-    "index.d.ts"
-  ],
   "typings": "index.d.ts",
   "scripts": {
     "build": "./scripts/build",
