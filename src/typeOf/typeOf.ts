@@ -58,5 +58,3 @@ export const typeOf: ITypeOf = (() => {
 
   return fn
 })()
-
-export default typeOf

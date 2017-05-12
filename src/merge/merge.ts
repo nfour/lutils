@@ -129,5 +129,3 @@ export interface IMergeFn extends IMerge {
 export const merge: IMergeFn = <any> new Merge().merge
 merge.black = mergeBlack
 merge.white = mergeWhite
-
-export default merge
