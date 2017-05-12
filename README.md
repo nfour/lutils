@@ -1,3 +1,9 @@
+<a href="https://travis-ci.org/nfour/lutils">
+  <img src="https://travis-ci.org/nfour/lutils.svg?branch=master" />
+</a>
+&nbsp;
+<a href="https://david-dm.org/nfour/lutils" title="dependencies status"><img src="https://david-dm.org/nfour/lutils/status.svg"/></a>
+
 # `lutils`
 
 _TypesSript documented utilities_
