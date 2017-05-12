@@ -6,7 +6,7 @@ import { merge } from '../merge'
 import { clone } from '../clone'
 
 describe('regression benchmark', () => {
-  function benchmark(timeout, fn) {
+  function benchmark (timeout, fn) {
     const timeoutAt = Date.now() + timeout
     let iterations = 0
 
@@ -18,7 +18,7 @@ describe('regression benchmark', () => {
     return iterations
   }
 
-  function evaluateBenchmark(old, current, offset) {
+  function evaluateBenchmark (old, current, offset) {
     const percentDiff = Math.round(((current - old) / old) * 100)
 
     expect(percentDiff).toBeGreaterThan(offset)

@@ -18,10 +18,7 @@ script:
 deploy:
   provider: script
   script:
-    - npm run release:typeOf
-    - npm run release:merge
-    - npm run release:clone
-    - npm run release:lutils
+    - npm run release
   on:
     tags: true
 

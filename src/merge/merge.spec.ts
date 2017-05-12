@@ -81,4 +81,3 @@ describe('Merge', () => {
     expect(obj1.a.ignored).toBe(false)
   })
 })
-
