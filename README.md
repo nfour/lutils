@@ -11,6 +11,8 @@ _TypesSript documented utilities_
 import { typeOf, merge, clone } from 'lutils'
 ```
 
+- See: [**CHANGELOG.md**](./CHANGELOG.md)
+
 --------------------------------
 
 ## merge
