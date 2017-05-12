@@ -1,60 +1,148 @@
-# Lutils `lutils`
-A few reliable utils. Browser-friendly.
+# `lutils`
 
-```js
+_TypesSript documented utilities_
+
+- [merge](#merge) for deep merging of objects
+- [clone](#clone) for deep cloning of objects & arrays
+- [typeOf](#typeof) for consistant type checking
+
+
+```ts
 import { typeOf, merge, clone } from 'lutils'
-let { typeOf, merge, clone } = require('lutils')
-
-typeOf = require('lutils-typeof')
-merge  = require('lutils-merge')
-clone  = require('lutils-clone')
 ```
 
-## API
-### `merge`
-Recursively merge objects.
-See [lutils-merge](https://github.com/nfour/lutils-merge)
+--------------------------------
 
-### `clone`
-Recursively clone objects.
-See [lutils-clone](https://github.com/nfour/lutils-clone)
+## merge
 
-### `typeOf`
-Type check for primitives reliably.
-See [lutils-typeof](https://github.com/nfour/lutils-typeof)
+Merge objects together, traversing objects & arrays recursively
 
+- `merge(subject, ...sources[])` => `subject`
+- Default **depth**: `10`
 
-## Why?
-Javascript doesn't need a lot on top of it now that we have ES6/ES7.
-Some things are still too hard to do, which is exactly what these utils try to fix.
+```ts
+import { merge } from 'lutils'
 
-## Example
-Below, a config file, `development.js`, can be composed of multiple files.
-
-```js
-import { merge, clone } from 'lutils'
-
-export default merge(
-    clone( require('./default') ),
-    {
-        database: "development",
-        server: { port: 1337 }
-    }
-    clone( require('./local') )
-)
-/*
-    {
-        name: "My App",
-        database: "development",
-        server: {
-            host: "0.0.0.0",
-            port: 1337,
-        },
-        ssh: { privateKey: "~/.ssh/myLocalPrivateKey.pem" }
-    }
-*/
+merge({ aa: { cc: 1 }, }, { aa: { cc: 2 } }, { bb: 3 })
+=== { aa: { cc: 2 }, bb: 3 }
 ```
-The above config would first inherit the default config, overwriting `database` and `server.port`.
-`./local`, a git untracked file, would then overwrite aspects specific to the developers machine, such as the `ssh.privateKey`.
 
-Because each config is cloned when required, the file `./default` will not be mutated, even though it is the base.
+--------------------------------
+
+Construct & configure your own `Merge` instance
+
+- `new Merge(config).merge`
+- See: [**config**](./src/merge/merge.ts#L31)
+
+```ts
+import { Merge } from 'lutils'
+
+const merge = new Merge({ depth: Infinity }).merge
+
+merge(megaDeep, ultraDeep)
+```
+
+--------------------------------
+
+Merge, but with two common behaviours, whitelisting and blacklisting
+
+- `merge.white(subject, ...sources[])` => `subject`
+- `merge.black(subject, ...sources[])` => `subject`
+
+```ts
+import { merge } from 'lutils'
+
+merge.white({ aa: { bb: 1, cc: 1 } }, { aa: { xx: 2, cc: 2 } })
+=== { aa: { bb: 1, cc: 2 } }
+
+merge.black({ aa: { bb: 1, cc: 1 } }, { aa: { xx: 2, cc: 2 } })
+=== { aa: { bb: 1, cc: 1, xx: 2 } }
+```
+
+--------------------------------
+
+## clone
+
+Clones objects & arrays recursively
+
+- `clone(subject)` => `clonedSubject`
+- Default **depth**: `10`
+
+```ts
+import { clone } from 'lutils'
+
+const cloned = clone({ my: { little: { foo: 'bar' } } })
+```
+
+- `new Clone(config).clone`
+- See: [**config**](./src/clone/clone.ts#L12)
+
+```ts
+import { Clone } from 'lutils'
+
+const clone = new Clone({ depth: Infinity }).clone
+
+const cloned = clone({ my: { little: { foo: 'bar' } } })
+```
+
+--------------------------------
+
+## typeOf
+
+Gets the type of a value as a lowercase string. \
+Like the built-in `typeof`, but works for all primitives.
+
+- `typeOf(value)` => `string`
+
+```ts
+import { typeOf } from 'lutils'
+
+typeOf(null)
+=== 'null'
+
+typeOf(NaN)
+=== 'nan'
+
+typeOf([])
+=== 'array'
+```
+
+--------------------------------
+
+Specific type checkers are also exported and attached to `typeOf` \
+These checkers also supply typescript with type information, meaning
+they can act a **type guards**.
+
+- `isBoolean(value)` => `boolean`
+- `is<type>(value)` => `boolean`
+- See: [**ITypeOf**](./src/typeOf/typeOf.ts#L3)
+
+```ts
+import { typeOf, isBoolean, isString } from 'lutils'
+
+typeOf.isNull(null)
+=== true
+
+isString(undefined)
+=== false
+
+typeOf.isString('')
+=== true
+
+isBoolean(false)
+=== true
+
+// Type guarding...
+
+function blah (aa: number|string) {
+  if (isString(aa)) {
+    // string
+    aa += '!!!!'
+  } else {
+    // number
+    ++aa 
+  }
+
+  return aa
+}
+```
