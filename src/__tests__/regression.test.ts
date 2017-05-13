@@ -1,9 +1,10 @@
+// tslint:disable:no-console
 import * as oldClone from 'lutils-clone'
 import * as oldMerge from 'lutils-merge'
 import * as oldTypeOf from 'lutils-typeof'
-import { typeOf } from '../typeOf'
-import { merge } from '../merge'
 import { clone } from '../clone'
+import { merge } from '../merge'
+import { typeOf } from '../typeOf'
 
 describe('regression benchmark', () => {
   function benchmark (timeout, fn) {

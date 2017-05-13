@@ -82,6 +82,7 @@ export class Clone {
 
   private depthWarning () {
     if (this.usingDefaultDepth) {
+      // tslint:disable-next-line:no-console
       console.warn(`[WARNING clone] default depth of ${this.depth} reached. Be explicit, set this manually`)
     }
   }
