@@ -1,4 +1,4 @@
-### `2.2.0` May 17th 2017
+### `2.3.0` May 17th 2017
 
 **Features**:
 - [x] `new Merge.White().merge` will construct a `merge.white` instance
