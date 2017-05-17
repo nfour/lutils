@@ -1,3 +1,10 @@
+### `2.2.0` May 17th 2017
+
+**Features**:
+- [x] `new Merge.White().merge` will construct a `merge.white` instance
+- [x] `new Merge.Black().merge` will construct a `merge.black` instance
+- [x] Both are also exported as `{ MergeWhite, MergeBlack }`
+
 ### `2.1.1` May 12th 2017
 
 **Breaking changes**:
