@@ -70,6 +70,17 @@ describe('Merge', () => {
     expect(obj1.a.ignored).toBe(undefined)
   })
 
+  it('new Merge.White().merge', () => {
+    const obj1 = { a: { notIgnored: false } as any }
+    const obj2 = { a: { notIgnored: true, ignored: true } as any }
+
+    new Merge.White().merge(obj1, obj2)
+
+    expect(obj1.a).not.toBe(obj2.a)
+    expect(obj1.a.notIgnored).toBe(true)
+    expect(obj1.a.ignored).toBe(undefined)
+  })
+
   it('merge.black', () => {
     const obj1 = { a: { ignored: false } as any }
     const obj2 = { a: { ignored: true, notIgnored: true } as any }

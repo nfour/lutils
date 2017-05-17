@@ -1,3 +1,4 @@
+// tslint:disable:max-classes-per-file
 import { typeOf } from '../typeOf'
 
 export interface IObject { [key: string]: any }
@@ -28,6 +29,11 @@ export interface IMerge {
   <T, S1>(t: T, s1: S1): S1 & T
 }
 
+export interface IMergeFn extends IMerge {
+  black?: IMerge
+  white?: IMerge
+}
+
 export interface IMergeTypes {
   object?: boolean
   array?: boolean
@@ -36,6 +42,9 @@ export interface IMergeTypes {
 }
 
 export class Merge {
+  public static White: typeof MergeWhite
+  public static Black: typeof MergeBlack
+
   public depth = 10
   public types: IMergeTypes = { object: true, array: true }
   public test: IMergeTest = tests.merge
@@ -113,20 +122,21 @@ export class Merge {
   }
 }
 
-export const mergeBlack = new Merge({
-  test: tests.black,
-}).merge
+export class MergeWhite extends Merge {
+  test = tests.white
+  traverseTargetKeys = true
 
-export const mergeWhite = new Merge({
-  test: tests.white,
-  traverseTargetKeys: true,
-}).merge as <T>(target: T, ...s: object[]) => T
-
-export interface IMergeFn extends IMerge {
-  black: IMerge
-  white: IMerge
+  merge: <T>(target: T, ...s: object[]) => T
 }
 
+export class MergeBlack extends Merge {
+  test = tests.black
+}
+
+Merge.White = MergeWhite
+Merge.Black = MergeBlack
+
 export const merge: IMergeFn = <any> new Merge().merge
-merge.black = mergeBlack
-merge.white = mergeWhite
+
+merge.black = new MergeBlack().merge
+merge.white = new MergeWhite().merge
