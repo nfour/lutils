@@ -1,5 +1,7 @@
 // tslint:disable:ban-types
 
+export interface IIndexedObject { [key: string]: any }
+
 export interface ITypeOf {
   (value: any): string
   isBoolean: (value: any) => value is boolean
@@ -9,8 +11,8 @@ export interface ITypeOf {
   isNumber: (value: any) => value is number
   isSymbol: (value: any) => value is symbol
   isFunction: (value: any) => value is Function
-  isArray: (value: any) => value is any[]
-  isObject: (value: any) => value is object
+  isArray: <O = any[]>(value: any) => value is O
+  isObject: <O = IIndexedObject>(value: any) => value is O
   isRegExp: (value: any) => value is RegExp
   isDate: (value: any) => value is Date
 }
@@ -25,8 +27,8 @@ export const isSymbol = (value): value is symbol => typeof value === 'symbol'
 
 // Object obfuscated types
 export const isFunction = (value): value is Function => typeof value === 'function'
-export const isArray = (value): value is any[] => Array.isArray(value)
-export const isObject = (value): value is object => typeOf(value) === 'object'
+export const isArray = <O = any[]>(value): value is O => Array.isArray(value)
+export const isObject = <O = IIndexedObject>(value): value is O => typeOf(value) === 'object'
 export const isRegExp = (value): value is RegExp => typeOf(value) === 'regexp'
 export const isDate = (value): value is Date => typeOf(value) === 'date'
 
