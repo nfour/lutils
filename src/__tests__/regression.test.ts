@@ -5,27 +5,9 @@ import * as oldTypeOf from 'lutils-typeof'
 import { clone } from '../clone'
 import { merge } from '../merge'
 import { typeOf } from '../typeOf'
+import { benchmark, evaluateBenchmark } from './utils';
 
 describe('regression benchmark', () => {
-  function benchmark (timeout, fn) {
-    const timeoutAt = Date.now() + timeout
-    let iterations = 0
-
-    do {
-      fn()
-      ++iterations
-    } while (Date.now() <= timeoutAt)
-
-    return iterations
-  }
-
-  function evaluateBenchmark (old, current, offset) {
-    const percentDiff = Math.round(((current - old) / old) * 100)
-
-    expect(percentDiff).toBeGreaterThan(offset)
-
-    return percentDiff
-  }
 
   const payload = {
     a: { b: { c: {

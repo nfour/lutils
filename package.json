@@ -14,6 +14,7 @@
   "scripts": {
     "build": "./scripts/build",
     "test": "jest src/**/*.spec.ts",
+    "test:test": "jest src/**/*.test.ts",
     "coverage": "jest src/**/*.spec.ts --coverage",
     "lint": "tslint src/**/*.ts",
     "lint:types": "tslint src/**/*.ts --type-check --project src",
@@ -36,7 +37,9 @@
   ],
   "devDependencies": {
     "@types/jest": "^19.2.3",
+    "@types/lodash": "^4.14.65",
     "jest": "^20.0.1",
+    "lodash": "^4.17.4",
     "lutils-clone": "0",
     "lutils-merge": "0",
     "lutils-typeof": "0",
