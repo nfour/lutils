@@ -1,4 +1,6 @@
+// tslint:disable:no-console
 // tslint:disable:max-classes-per-file
+
 import { typeOf } from '../typeOf'
 
 export interface IObject { [key: string]: any }
@@ -116,8 +118,10 @@ export class Merge {
 
   private depthWarning () {
     if (this.usingDefaultDepth) {
-      // tslint:disable-next-line:no-console
+      const stack = new Error().stack
+
       console.warn(`[WARNING merge] default depth of ${this.depth} reached. Be explicit, set this manually`)
+      console.warn(stack)
     }
   }
 }
